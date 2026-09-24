@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PawTail</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f5f2;
+      color: #252525;
+    }
+
+    header {
+      background: #ffffff;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e2de;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      color: #6b4f3a;
+    }
+
+    .logo span {
+      color: #c98b5b;
+    }
+
+    .hero {
+      padding: 45px 20px 35px;
+      text-align: center;
+      background: linear-gradient(135deg, #fffaf5, #f3ebe3);
+    }
+
+    .hero h1 {
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #666;
+      line-height: 1.5;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 25px 18px 60px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      margin-bottom: 18px;
+      font-size: 21px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 14px 0 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 11px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .measurements {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 13px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #6b4f3a;
+      color: white;
+      margin-top: 12px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .price {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 800;
+      color: #6b4f3a;
+      margin: 15px 0;
+    }
+
+    .summary {
+      background: #f7f1eb;
+      padding: 15px;
+      border-radius: 12px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      padding: 30px 15px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .measurements {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Paw<span>Tail</span></div>
+  <div>🐾</div>
+</header>
+
+<section class="hero">
+  <h1>Kurtka stworzona dla Twojego psa</h1>
+  <p>
+    Podaj informacje o swoim psie, jego wymiary i wybierz konfigurację.
+    PawTail pomoże przygotować produkt dopasowany do niego.
+  </p>
+</section>
+
+<main class="container">
+
+  <div class="card">
+    <h2>🐶 Poznajmy Twojego psa</h2>
+
+    <label for="dogName">Imię psa</label>
+    <input id="dogName" type="text" placeholder="np. Max">
+
+    <label for="breed">Rasa</label>
+    <input id="breed" type="text" placeholder="np. Yorkshire Terrier">
+
+    <label for="weight">Waga (kg)</label>
+    <input id="weight" type="number" step="0.1" placeholder="np. 4.5">
+
+    <button onclick="nextStep()">Dalej →</button>
+  </div>
+
+
+  <div class="card hidden" id="measurementsCard">
+    <h2>📏 Pomiary psa</h2>
+
+    <div class="measurements">
+
+      <div>
+        <label for="neck">Obwód szyi (cm)</label>
+        <input id="neck" type="number" placeholder="np. 28">
+      </div>
+
+      <div>
+        <label for="chest">Obwód klatki (cm)</label>
+        <input id="chest" type="number" placeholder="np. 42">
+      </div>
+
+      <div>
+        <label for="back">Długość grzbietu (cm)</label>
+        <input id="back" type="number" placeholder="np. 35">
+      </div>
+
+      <div>
+        <label for="leg">Długość łapy (cm)</label>
+        <input id="leg" type="number" placeholder="np. 15">
+      </div>
+
+    </div>
+
+    <button onclick="nextStep2()">Konfiguruj kurtkę →</button>
+  </div>
+
+
+  <div class="card hidden" id="jacketCard">
+    <h2>🧥 Konfiguracja kurtki</h2>
+
+    <label for="material">Materiał</label>
+    <select id="material" onchange="calculatePrice()">
+      <option value="0">Standard</option>
+      <option value="40">Premium +40 zł</option>
+      <option value="80">Outdoor +80 zł</option>
+    </select>
+
+    <label for="lining">Podszycie</label>
+    <select id="lining" onchange="calculatePrice()">
+      <option value="0">Standard</option>
+      <option value="30">Ciepłe +30 zł</option>
+      <option value="60">Termiczne +60 zł</option>
+    </select>
+
+    <label for="reflective">Elementy odblaskowe</label>
+    <select id="reflective" onchange="calculatePrice()">
+      <option value="0">Nie</option>
+      <option value="25">Tak +25 zł</option>
+    </select>
+
+    <div class="price" id="price">
+      199 zł
+    </div>
+
+    <button onclick="createOrder()">Zapisz zamówienie →</button>
+  </div>
+
+
+  <div class="card hidden" id="orderCard">
+    <h2>✅ Zamówienie</h2>
+
+    <div class="summary" id="summary"></div>
+
+    <button onclick="saveOrder()">Potwierdź zamówienie</button>
+  </div>
+
+</main>
+
+<footer>
+  PawTail © 2026
+</footer>
+
+
+<script>
+
+  let basePrice = 199;
+
+  function nextStep() {
+
+    const name = document.getElementById("dogName").value;
+
+    if (!name) {
+      alert("Podaj imię psa.");
+      return;
+    }
+
+    document
+      .getElementById("measurementsCard")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("measurementsCard")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+
+  function nextStep2() {
+
+    const chest = document.getElementById("chest").value;
+    const back = document.getElementById("back").value;
+
+    if (!chest || !back) {
+      alert("Podaj przynajmniej obwód klatki i długość grzbietu.");
+      return;
+    }
+
+    document
+      .getElementById("jacketCard")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("jacketCard")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+
+  function calculatePrice() {
+
+    const material =
+      Number(document.getElementById("material").value);
+
+    const lining =
+      Number(document.getElementById("lining").value);
+
+    const reflective =
+      Number(document.getElementById("reflective").value);
+
+    const finalPrice =
+      basePrice + material + lining + reflective;
+
+    document.getElementById("price").innerText =
+      finalPrice + " zł";
+  }
+
+
+  function createOrder() {
+
+    const name =
+      document.getElementById("dogName").value;
+
+    const breed =
+      document.getElementById("breed").value || "Nie podano";
+
+    const weight =
+      document.getElementById("weight").value || "Nie podano";
+
+    const neck =
+      document.getElementById("neck").value;
+
+    const chest =
+      document.getElementById("chest").value;
+
+    const back =
+      document.getElementById("back").value;
+
+    const price =
+      document.getElementById("price").innerText;
+
+    document.getElementById("summary").innerHTML = `
+      <strong>Pies:</strong> ${name}<br>
+      <strong>Rasa:</strong> ${breed}<br>
+      <strong>Waga:</strong> ${weight} kg<br>
+      <strong>Szyja:</strong> ${neck} cm<br>
+      <strong>Klatka:</strong> ${chest} cm<br>
+      <strong>Grzbiet:</strong> ${back} cm<br>
+      <strong>Cena kurtki:</strong> ${price}
+    `;
+
+    document
+      .getElementById("orderCard")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("orderCard")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+
+  function saveOrder() {
+
+    const name =
+      document.getElementById("dogName").value;
+
+    localStorage.setItem(
+      "pawtail_last_order",
+      JSON.stringify({
+        dogName: name,
+        date: new Date().toISOString()
+      })
+    );
+
+    alert(
+      "Zamówienie zostało zapisane w tej wersji demonstracyjnej PawTail."
+    );
+  }
+
+</script>
+
+</body>
+</html>
